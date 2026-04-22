@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>क्वांटम एआई सिम्युलेटर</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="background-orbs"></div>
+    
+    <div class="container glass-effect">
+        <header>
+            <h1 class="neon-text">क्वांटम एआई सिम्युलेटर</h1>
+            <p>अपने जीवन का कोई फैसला लिखें और समानांतर ब्रह्मांड (Parallel Universe) देखें।</p>
+        </header>
+
+        <main>
+            <div class="input-section">
+                <input type="text" id="userDecision" placeholder="उदा: अगर मैं आज से रोज़ कोडिंग करूँ तो..." autocomplete="off">
+                <button id="simulateBtn" class="glow-btn">भविष्य स्कैन करें</button>
+            </div>
+
+            <div id="loader" class="hidden">
+                <div class="spinner"></div>
+                <p>क्वांटम डेटाबेस से जुड़ रहा है...</p>
+            </div>
+
+            <div id="results" class="results-grid hidden">
+                <div class="timeline-card best-case">
+                    <h3>यूनिवर्स 404 (Best Case)</h3>
+                    <p class="typewriter" id="output1">इंतज़ार करें...</p>
+                </div>
+                <div class="timeline-card worst-case">
+                    <h3>यूनिवर्स 616 (Dark Case)</h3>
+                    <p class="typewriter" id="output2">इंतज़ार करें...</p>
+                </div>
+                <div class="timeline-card wildcard">
+                    <h3>यूनिवर्स 999 (Wildcard)</h3>
+                    <p class="typewriter" id="output3">इंतज़ार करें...</p>
+                </div>
+            </div>
+        </main>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
