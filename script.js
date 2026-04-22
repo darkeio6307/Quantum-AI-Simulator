@@ -1,5 +1,5 @@
 const API_KEY = 'AIzaSyCO6pp5ssIpESpmlNMyqKCo2swCbNTFOPw'; 
-const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${API_KEY}`;
+const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=${API_KEY}`;
 
 document.getElementById('simulateBtn').addEventListener('click', async () => {
     const input = document.getElementById('userDecision').value;
