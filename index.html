@@ -3,45 +3,271 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>क्वांटम एआई सिम्युलेटर</title>
-    <link rel="stylesheet" href="style.css">
+    <title>InstaSaver Pro Premium</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <style>
+        body {
+            font-family: '-apple-system', BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background-color: #f4f6f9;
+            margin: 0;
+            padding: 15px;
+            display: flex;
+            justify-content: center;
+        }
+        .container {
+            background: white;
+            padding: 20px;
+            border-radius: 16px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            width: 100%;
+            max-width: 400px;
+            box-sizing: border-box;
+        }
+        h2 { text-align: center; color: #333; margin-top: 0; }
+        .box { margin-bottom: 20px; }
+        label { font-weight: bold; display: block; margin-bottom: 8px; color: #555; }
+        input[type="number"], input[type="text"] {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 16px;
+            box-sizing: border-box;
+            outline: none;
+        }
+        input:focus { border-color: #0088cc; }
+        .plans-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        .plan-btn {
+            background: #f0f3f6;
+            border: 2px solid transparent;
+            padding: 10px;
+            border-radius: 8px;
+            text-align: center;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 13px;
+        }
+        .plan-btn.active {
+            background: #e6f2ff;
+            border-color: #0088cc;
+            color: #0088cc;
+        }
+        .total-box {
+            background: #e6f7ed;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            font-size: 20px;
+            font-weight: bold;
+            color: #27ae60;
+            margin-bottom: 20px;
+        }
+        .btn {
+            background: #0088cc;
+            color: white;
+            border: none;
+            width: 100%;
+            padding: 14px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            text-decoration: none;
+            display: block;
+            text-align: center;
+            box-sizing: border-box;
+            margin-bottom: 10px;
+        }
+        .btn-pay { background: #27ae60; }
+        .btn-submit { background: #ff9800; }
+        #qrcode {
+            display: flex;
+            justify-content: center;
+            margin: 20px 0;
+            padding: 10px;
+            background: white;
+            border: 2px dashed #ccc;
+            border-radius: 8px;
+        }
+        .hidden { display: none; }
+        /* Receipt Style */
+        .receipt {
+            border: 2px solid #ddd;
+            padding: 20px;
+            border-radius: 8px;
+            background: #fff;
+            background-image: linear-gradient(rgba(0,0,0,0.02) 1px, transparent 1px);
+            background-size: 100% 20px;
+        }
+        .receipt-header { text-align: center; font-weight: bold; border-bottom: 2px dashed #ccc; padding-bottom: 10px; margin-bottom: 15px; }
+        .receipt-row { display: flex; justify-content: space-between; margin-bottom: 10px; font-size: 14px; }
+    </style>
 </head>
 <body>
-    <div class="background-orbs"></div>
+
+<div class="container" id="main-screen">
+    <h2>InstaSaver Pro Premium</h2>
     
-    <div class="container glass-effect">
-        <header>
-            <h1 class="neon-text">क्वांटम एआई सिम्युलेटर</h1>
-            <p>अपने जीवन का कोई फैसला लिखें और समानांतर ब्रह्मांड (Parallel Universe) देखें।</p>
-        </header>
-
-        <main>
-            <div class="input-section">
-                <input type="text" id="userDecision" placeholder="उदा: अगर मैं आज से रोज़ कोडिंग करूँ तो..." autocomplete="off">
-                <button id="simulateBtn" class="glow-btn">भविष्य स्कैन करें</button>
-            </div>
-
-            <div id="loader" class="hidden">
-                <div class="spinner"></div>
-                <p>क्वांटम डेटाबेस से जुड़ रहा है...</p>
-            </div>
-
-            <div id="results" class="results-grid hidden">
-                <div class="timeline-card best-case">
-                    <h3>यूनिवर्स 404 (Best Case)</h3>
-                    <p class="typewriter" id="output1">इंतज़ार करें...</p>
-                </div>
-                <div class="timeline-card worst-case">
-                    <h3>यूनिवर्स 616 (Dark Case)</h3>
-                    <p class="typewriter" id="output2">इंतज़ार करें...</p>
-                </div>
-                <div class="timeline-card wildcard">
-                    <h3>यूनिवर्स 999 (Wildcard)</h3>
-                    <p class="typewriter" id="output3">इंतज़ार करें...</p>
-                </div>
-            </div>
-        </main>
+    <div class="box">
+        <label>Popular Plans Select Karein:</label>
+        <div class="plans-grid">
+            <div class="plan-btn" onclick="selectPlan(30, 99)">30 Days<br>₹99</div>
+            <div class="plan-btn" onclick="selectPlan(60, 130)">60 Days<br>₹130</div>
+            <div class="plan-btn" onclick="selectPlan(90, 250)">90 Days<br>₹250</div>
+        </div>
     </div>
-    <script src="script.js"></script>
+
+    <div class="box">
+        <label>Ya Custom Din Type Karein (₹3/day):</label>
+        <input type="number" id="days-input" min="1" placeholder="Enter number of days" oninput="calculateCustomPrice()">
+    </div>
+
+    <div class="total-box">
+        Total Amount: ₹<span id="amount-display">0</span>
+    </div>
+
+    <button class="btn" onclick="generatePaymentSystem()">Proceed to Pay</button>
+
+    <div id="payment-section" class="hidden">
+        <hr>
+        <label style="text-align:center; margin-top:15px;">Option 1: QR Code Scan Karein</label>
+        <div id="qrcode"></div>
+
+        <label style="text-align:center;">Option 2: Direct App Se Pay Karein</label>
+        <a href="#" id="upi-deep-link" class="btn btn-pay">🚀 Pay Via UPI App</a>
+
+        <hr style="margin-top:20px;">
+        <div class="box" style="margin-top:15px;">
+            <label>Payment ke baad 12-Digit UTR / Ref No. Daalein:</label>
+            <input type="text" id="utr-input" maxlength="12" placeholder="Enter 12 digit UTR number">
+        </div>
+        <button class="btn btn-submit" onclick="submitUTR()">Submit & Get Receipt</button>
+    </div>
+</div>
+
+<div class="container hidden" id="receipt-screen">
+    <h2>✅ Payment Submitted!</h2>
+    <div class="receipt">
+        <div class="receipt-header">INSTASAVER PRO RECEIPT</div>
+        <div class="receipt-row"><span>Status:</span> <strong style="color:orange;">Pending Verification</strong></div>
+        <div class="receipt-row"><span>UTR / Ref No:</span> <span id="r-utr" style="font-family:monospace; font-weight:bold;"></span></div>
+        <div class="receipt-row"><span>Amount Paid:</span> <span id="r-amount" style="font-weight:bold;"></span></div>
+        <div class="receipt-row"><span>Validity:</span> <span id="r-days"></span></div>
+        <div class="receipt-row"><span>Date & Time:</span> <span id="r-date"></span></div>
+    </div>
+    <p style="font-size:12px; color:#666; text-align:center; margin-top:15px;">Admin 5-10 mins me UTR verify karke aapka premium active kar dega. Is screen ka screenshot le lein.</p>
+    <button class="btn" onclick="closeWebApp()">Back to Bot</button>
+</div>
+
+<script>
+    const MY_UPI = "k.jnha@ptyes";
+    const BOT_NAME = "InstaSaver Pro";
+    let finalDays = 0;
+    let finalAmount = 0;
+    let qrGenerator = null;
+
+    function selectPlan(days, price) {
+        // Deselect grid active classes
+        document.querySelectorAll('.plan-btn').forEach(btn => btn.classList.remove('active'));
+        // Find clicked button and activate
+        event.currentTarget.classList.add('active');
+        document.getElementById('days-input').value = ''; // clear custom input
+        
+        finalDays = days;
+        finalAmount = price;
+        document.getElementById('amount-display').innerText = finalAmount;
+    }
+
+    function calculateCustomPrice() {
+        document.querySelectorAll('.plan-btn').forEach(btn => btn.classList.remove('active'));
+        let days = parseInt(document.getElementById('days-input').value);
+        
+        if (!days || days <= 0) {
+            finalDays = 0;
+            finalAmount = 0;
+            document.getElementById('amount-display').innerText = '0';
+            return;
+        }
+
+        finalDays = days;
+        // Check if custom days matches combo days to apply offer automatically
+        if (days === 30) finalAmount = 99;
+        else if (days === 60) finalAmount = 130;
+        else if (days === 90) finalAmount = 250;
+        else finalAmount = days * 3;
+
+        document.getElementById('amount-display').innerText = finalAmount;
+    }
+
+    function generatePaymentSystem() {
+        if (finalAmount <= 0) {
+            alert("Please select a plan or enter valid days!");
+            return;
+        }
+
+        // Generate UPI String
+        const upiUrl = `upi://pay?pa=${MY_UPI}&pn=${encodeURIComponent(BOT_NAME)}&am=${finalAmount}&cu=INR`;
+        
+        // Update Deep Link Button
+        document.getElementById('upi-deep-link').href = upiUrl;
+
+        // Clear previous QR if any
+        document.getElementById("qrcode").innerHTML = "";
+        
+        // Generate Fresh QR Code
+        qrGenerator = new QRCode(document.getElementById("qrcode"), {
+            text: upiUrl,
+            width: 180,
+            height: 180,
+            colorDark : "#000000",
+            colorLight : "#ffffff",
+            correctLevel : QRCode.CorrectLevel.H
+        });
+
+        // Reveal Payment Section
+        document.getElementById('payment-section').classList.remove('hidden');
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+
+    function submitUTR() {
+        const utr = document.getElementById('utr-input').value.trim();
+        if (utr.length !== 12 || isNaN(utr)) {
+            alert("Kripya sahi 12-digit ka UTR / Reference number dalein!");
+            return;
+        }
+
+        // Receipt Data Generate Karein
+        document.getElementById('r-utr').innerText = utr;
+        document.getElementById('r-amount').innerText = `₹${finalAmount}`;
+        document.getElementById('r-days').innerText = `${finalDays} Days`;
+        document.getElementById('r-date').innerText = new Date().toLocaleString();
+
+        // Switch Screen
+        document.getElementById('main-screen').classList.add('hidden');
+        document.getElementById('receipt-screen').classList.remove('hidden');
+
+        // Telegram Bot ko data bhejna (Agar WebApp use kar rahe ho)
+        if (window.Telegram && window.Telegram.WebApp) {
+            const data = {
+                utr: utr,
+                amount: finalAmount,
+                days: finalDays
+            };
+            window.Telegram.WebApp.sendData(JSON.stringify(data));
+        }
+    }
+
+    function closeWebApp() {
+        if (window.Telegram && window.Telegram.WebApp) {
+            window.Telegram.WebApp.close();
+        }
+    }
+</script>
+
 </body>
 </html>
