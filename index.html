@@ -1,99 +1,183 @@
 <!DOCTYPE html>
-<html lang="hi">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>InstaSaver Pro Premium</title>
+    <title>Secure Checkout | InstaSaver Pro</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
-        body { font-family: sans-serif; background-color: #f4f6f9; margin: 0; padding: 15px; display: flex; justify-content: center; }
-        .container { background: white; padding: 20px; border-radius: 16px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); width: 100%; max-width: 400px; box-sizing: border-box; }
-        h2 { text-align: center; color: #333; margin-top: 0; }
+        :root { --primary: #0088cc; --success: #27ae60; --danger: #e11d48; --bg: #f3f4f6; --card: #ffffff; --text: #1f2937; --muted: #6b7280; --border: #e5e7eb; }
+        
+        body { font-family: 'Inter', sans-serif; background-color: var(--bg); margin: 0; padding: 20px 15px; display: flex; justify-content: center; align-items: flex-start; min-height: 100vh; color: var(--text); box-sizing: border-box; }
+        
+        .container { background: var(--card); padding: 25px 20px; border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); width: 100%; max-width: 400px; box-sizing: border-box; position: relative; overflow: hidden; margin-bottom: 30px; }
+        
+        .header { text-align: center; margin-bottom: 20px; }
+        .header h2 { margin: 0; font-size: 22px; color: var(--text); display: flex; align-items: center; justify-content: center; gap: 8px; }
+        .secure-badge { font-size: 12px; color: var(--success); font-weight: 600; display: flex; align-items: center; justify-content: center; gap: 4px; margin-top: 5px; }
+        
+        .user-chip { background: #eff6ff; color: var(--primary); padding: 8px 15px; border-radius: 50px; font-size: 14px; font-weight: 600; text-align: center; margin-bottom: 20px; display: inline-block; width: 100%; box-sizing: border-box; }
+        
+        /* Premium Features Card - Glass Look */
+        .features-card { background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%); border: 1px solid #bae6fd; padding: 15px; border-radius: 16px; margin-bottom: 20px; position: relative; overflow: hidden; }
+        .features-card h3 { margin: 0 0 10px 0; font-size: 16px; color: #0284c7; display: flex; align-items: center; gap: 6px; }
+        .features-list { list-style: none; padding: 0; margin: 0; font-size: 13px; line-height: 1.6; color: #334155; }
+        .features-list li { display: flex; align-items: center; gap: 6px; }
+        
+        /* GLASS SHINE ANIMATION */
+        @keyframes glass-shine {
+            0% { transform: translateX(-150%) skewX(-25deg); }
+            100% { transform: translateX(250%) skewX(-25deg); }
+        }
+        .shine-effect { position: relative; overflow: hidden; }
+        .shine-effect::after {
+            content: ''; position: absolute; top: 0; left: 0; width: 40%; height: 100%;
+            background: linear-gradient(to right, rgba(255,255,255,0) 0%, rgba(255,255,255,0.4) 50%, rgba(255,255,255,0) 100%);
+            transform: skewX(-25deg); animation: glass-shine 3s infinite;
+        }
+
+        label { font-weight: 600; display: block; margin-bottom: 8px; font-size: 14px; color: #374151; }
         .box { margin-bottom: 20px; }
-        label { font-weight: bold; display: block; margin-bottom: 8px; color: #555; }
-        input[type="number"], input[type="text"] { width: 100%; padding: 12px; border: 2px solid #e0e0e0; border-radius: 8px; font-size: 16px; box-sizing: border-box; outline: none; }
-        .plans-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 20px; }
-        .plan-btn { background: #f0f3f6; border: 2px solid transparent; padding: 10px; border-radius: 8px; text-align: center; cursor: pointer; font-weight: bold; font-size: 13px; }
-        .plan-btn.active { background: #e6f2ff; border-color: #0088cc; color: #0088cc; }
-        .total-box { background: #e6f7ed; padding: 15px; border-radius: 8px; text-align: center; font-size: 20px; font-weight: bold; color: #27ae60; margin-bottom: 20px; }
-        .btn { background: #0088cc; color: white; border: none; width: 100%; padding: 14px; border-radius: 8px; font-size: 16px; font-weight: bold; cursor: pointer; display: block; text-align: center; margin-bottom: 10px; text-decoration: none;}
-        .btn-pay { background: #27ae60; }
-        .btn-submit { background: #ff9800; }
-        #qrcode { display: flex; justify-content: center; margin: 20px 0; padding: 10px; border: 2px dashed #ccc; border-radius: 8px; }
+        input[type="number"], input[type="text"] { width: 100%; padding: 14px; border: 2px solid var(--border); border-radius: 12px; font-size: 16px; box-sizing: border-box; outline: none; transition: 0.3s; background: #f9fafb; }
+        input:focus { border-color: var(--primary); background: #fff; box-shadow: 0 0 0 4px rgba(0,136,204,0.1); }
+        
+        .plans-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+        .plan-btn { background: #f9fafb; border: 2px solid var(--border); padding: 12px 5px; border-radius: 12px; text-align: center; cursor: pointer; font-weight: 700; font-size: 14px; transition: 0.2s; color: var(--muted); }
+        .plan-btn span { display: block; font-size: 11px; font-weight: 400; margin-bottom: 4px; }
+        .plan-btn.active { background: #eff6ff; border-color: var(--primary); color: var(--primary); transform: scale(1.02); }
+        
+        .total-box { background: #f0fdf4; border: 1px dashed var(--success); padding: 15px; border-radius: 12px; text-align: center; font-size: 22px; font-weight: 700; color: var(--success); margin-bottom: 20px; }
+        
+        .btn { background: var(--primary); color: white; border: none; width: 100%; padding: 16px; border-radius: 12px; font-size: 16px; font-weight: 700; cursor: pointer; display: block; text-align: center; margin-bottom: 15px; text-decoration: none; transition: 0.2s; box-sizing: border-box; }
+        .btn:active { transform: scale(0.98); }
+        .btn-pay { background: var(--success); box-shadow: 0 4px 14px rgba(39, 174, 96, 0.3); }
+        .btn-submit { background: #111827; }
+        .btn:disabled { background: #9ca3af; cursor: not-allowed; }
+        
+        #qrcode { display: flex; justify-content: center; margin: 20px 0; padding: 15px; border: 2px dashed var(--border); border-radius: 16px; background: #fff; }
         .hidden { display: none; }
-        .receipt { border: 2px solid #ddd; padding: 15px; border-radius: 8px; background: #fff; }
-        .receipt-header { text-align: center; font-weight: bold; border-bottom: 2px dashed #ccc; padding-bottom: 10px; margin-bottom: 10px; }
-        .receipt-row { display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 14px; }
-        .user-info { text-align: center; color: #0088cc; font-weight: bold; margin-bottom: 15px; font-size: 14px; }
+        
+        .tnc-box { background: #fef2f2; border: 1px solid #fecaca; padding: 12px 15px; border-radius: 10px; font-size: 12px; color: #991b1b; margin-bottom: 20px; line-height: 1.5; }
+        .tnc-box p { margin: 0 0 8px 0; font-weight: 700; display: flex; align-items: center; gap: 5px; }
+        .tnc-box ul { margin: 0; padding-left: 18px; }
+        .tnc-box li { margin-bottom: 4px; }
+        .tnc-box li span { font-weight: 600; color: var(--danger); }
+
+        .receipt-card { border: 1px solid var(--border); border-radius: 16px; background: #fff; padding: 20px; position: relative; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); }
+        .receipt-card::before, .receipt-card::after { content: ''; position: absolute; width: 20px; height: 20px; background: var(--bg); border-radius: 50%; top: 45px; }
+        .receipt-card::before { left: -10px; border-right: 1px solid var(--border); }
+        .receipt-card::after { right: -10px; border-left: 1px solid var(--border); }
+        
+        .success-icon { width: 50px; height: 50px; background: #dcfce7; color: var(--success); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 24px; margin: 0 auto 15px auto; }
+        .receipt-header { text-align: center; font-weight: 700; border-bottom: 2px dashed var(--border); padding-bottom: 20px; margin-bottom: 15px; font-size: 18px; }
+        .receipt-row { display: flex; justify-content: space-between; margin-bottom: 10px; font-size: 14px; color: var(--muted); }
+        .receipt-row strong { color: var(--text); }
+        
+        .timer-text { font-size: 13px; color: var(--primary); text-align: center; margin-top: 15px; font-weight: 600; }
     </style>
 </head>
 <body>
 
 <div class="container" id="main-screen">
-    <h2>InstaSaver Pro</h2>
-    <div class="user-info" id="greeting">Welcome, User!</div>
+    <div class="header">
+        <h2>🔒 Secure Checkout</h2>
+        <div class="secure-badge">✓ Protected by Telegram API</div>
+    </div>
+    
+    <div class="user-chip" id="greeting">👤 Verifying User...</div>
+    
+    <div class="features-card shine-effect">
+        <h3>✨ Premium Benefits Included:</h3>
+        <ul class="features-list">
+            <li>📥 Unlimited Instagram downloads</li>
+            <li>🎵 MP3 Audio Extractor</li>
+            <li>📦 Batch download (5 URLs at once)</li>
+            <li>⚡ Priority processing & HD quality</li>
+            <li>📁 Album & carousel support</li>
+            <li>🚫 Ad-free experience</li>
+        </ul>
+    </div>
     
     <div class="box">
-        <label>Popular Plans:</label>
+        <label>Select Premium Plan:</label>
         <div class="plans-grid">
-            <div class="plan-btn" onclick="selectPlan(30, 99)">30 Days<br>₹99</div>
-            <div class="plan-btn" onclick="selectPlan(60, 130)">60 Days<br>₹130</div>
-            <div class="plan-btn" onclick="selectPlan(90, 250)">90 Days<br>₹250</div>
+            <div class="plan-btn" onclick="selectPlan(30, 99)"><span>30 Days</span>₹99</div>
+            <div class="plan-btn" onclick="selectPlan(60, 130)"><span>60 Days</span>₹130</div>
+            <div class="plan-btn" onclick="selectPlan(90, 250)"><span>90 Days</span>₹250</div>
         </div>
     </div>
 
     <div class="box">
-        <label>Custom Days (₹3/day):</label>
-        <input type="number" id="days-input" min="1" placeholder="Enter days" oninput="calculateCustomPrice()">
+        <label>Or Enter Custom Days (₹3/day):</label>
+        <input type="number" id="days-input" min="1" placeholder="e.g. 15" oninput="calculateCustomPrice()">
     </div>
 
-    <div class="total-box">Total: ₹<span id="amount-display">0</span></div>
-    <button class="btn" onclick="generatePaymentSystem()">Proceed to Pay</button>
+    <div class="tnc-box">
+        <p>⚠️ Strict Terms & Conditions:</p>
+        <ul>
+            <li>Purchases under <b>₹100</b> are strictly <b>Non-Refundable</b>.</li>
+            <li>Refund requests must be initiated within <b>6 hours</b>.</li>
+            <li>Submitting a <span>Fake UTR</span> will result in a <span>Permanent Ban</span>.</li>
+            <li>Account sharing is prohibited. (1 Plan = 1 Telegram ID).</li>
+            <li>Activation takes <b>5-10 minutes</b> after verification.</li>
+        </ul>
+    </div>
+
+    <div class="total-box">Amount to Pay: ₹<span id="amount-display">0</span></div>
+    
+    <button class="btn shine-effect" style="background: linear-gradient(90deg, #0088cc, #005f99);" onclick="generatePaymentSystem()">Proceed to Pay</button>
 
     <div id="payment-section" class="hidden">
-        <hr>
+        <hr style="border:0; border-top:1px solid #e5e7eb; margin: 20px 0;">
+        <label style="text-align:center;">Scan QR Code to Pay</label>
         <div id="qrcode"></div>
-        <a href="#" id="upi-deep-link" class="btn btn-pay">🚀 Pay Via UPI App</a>
-        <hr>
-        <div class="box">
-            <label>Payment UTR / Ref No (12 Digits):</label>
-            <input type="text" id="utr-input" maxlength="12" placeholder="Enter 12 digit UTR">
+        
+        <button class="btn btn-pay shine-effect" onclick="payViaUPI()">⚡ Pay Via UPI App</button>
+        
+        <div class="box" style="margin-top: 25px;">
+            <label>Enter 12-Digit UTR / Ref No:</label>
+            <input type="text" id="utr-input" maxlength="12" placeholder="e.g. 312345678901">
         </div>
-        <button class="btn btn-submit" onclick="submitUTR()">Submit & Get Receipt</button>
+        <button class="btn btn-submit" id="submit-btn" onclick="submitUTR()">Verify & Submit</button>
     </div>
 </div>
 
 <div class="container hidden" id="receipt-screen">
-    <h2>✅ Receipt Generated</h2>
-    <div class="receipt">
-        <div class="receipt-header">OFFICIAL RECEIPT</div>
-        <div class="receipt-row"><span>Name:</span> <strong id="r-name"></strong></div>
-        <div class="receipt-row"><span>TG ID:</span> <span id="r-id" style="font-family:monospace;"></span></div>
-        <div class="receipt-row"><span>Status:</span> <strong style="color:orange;">Pending</strong></div>
-        <div class="receipt-row"><span>UTR No:</span> <span id="r-utr" style="font-family:monospace;"></span></div>
-        <div class="receipt-row"><span>Amount:</span> <strong id="r-amount"></strong></div>
-        <div class="receipt-row"><span>Validity:</span> <span id="r-days"></span></div>
+    <div class="success-icon">✓</div>
+    <div class="receipt-card">
+        <div class="receipt-header">PAYMENT RECEIPT</div>
+        <div class="receipt-row"><span>User Name:</span> <strong id="r-name"></strong></div>
+        <div class="receipt-row"><span>Telegram ID:</span> <strong id="r-id" style="font-family:monospace;"></strong></div>
+        <div class="receipt-row"><span>Status:</span> <strong style="color:#eab308;">Pending Verification</strong></div>
+        <div class="receipt-row"><span>UTR Number:</span> <strong id="r-utr" style="font-family:monospace;"></strong></div>
+        <div class="receipt-row"><span>Amount Paid:</span> <strong id="r-amount" style="color:#27ae60; font-size:16px;"></strong></div>
+        <div class="receipt-row"><span>Validity:</span> <strong id="r-days"></strong></div>
     </div>
-    <p style="font-size:12px; color:#666; text-align:center; margin-top:15px;">Please take a screenshot. Admin will verify UTR and activate premium in 5 mins.</p>
-    <button class="btn" onclick="window.Telegram.WebApp.close()">Close & Return</button>
+    
+    <div class="timer-text" id="countdown-text">Sending data to bot in 5 seconds...</div>
+    <button class="btn btn-submit" style="margin-top: 15px;" id="force-close-btn" onclick="forceSubmitNow()">Submit Now</button>
 </div>
 
 <script>
     const MY_UPI = "k.jnha@ptyes"; 
     let finalDays = 0, finalAmount = 0;
+    let currentUpiUrl = ""; 
     
-    // Telegram WebApp Initialization
     let tg = window.Telegram.WebApp;
+    tg.ready(); 
     tg.expand();
-    let tgUser = "User";
-    let tgId = "Unknown ID";
+    
+    let tgUser = "Telegram User"; 
+    let tgId = "Hidden ID";       
     
     if (tg.initDataUnsafe && tg.initDataUnsafe.user) {
         tgUser = tg.initDataUnsafe.user.first_name;
         tgId = tg.initDataUnsafe.user.id;
-        document.getElementById('greeting').innerText = `Welcome, ${tgUser}!`;
     }
+    
+    document.getElementById('greeting').innerHTML = `👤 Hello, <b>${tgUser}</b>!`;
 
     function selectPlan(days, price) {
         document.querySelectorAll('.plan-btn').forEach(btn => btn.classList.remove('active'));
@@ -116,19 +200,35 @@
     }
 
     function generatePaymentSystem() {
-        if (finalAmount <= 0) return alert("Select a plan!");
-        const upiUrl = `upi://pay?pa=${MY_UPI}&pn=InstaSaver&am=${finalAmount}&cu=INR`;
-        document.getElementById('upi-deep-link').href = upiUrl;
+        if (finalAmount <= 0) return alert("Please select a plan or enter valid days!");
+        currentUpiUrl = `upi://pay?pa=${MY_UPI}&pn=InstaSaver&am=${finalAmount}&cu=INR`;
+        
         document.getElementById("qrcode").innerHTML = "";
-        new QRCode(document.getElementById("qrcode"), { text: upiUrl, width: 180, height: 180 });
+        new QRCode(document.getElementById("qrcode"), { text: currentUpiUrl, width: 180, height: 180, colorDark : "#1f2937" });
         document.getElementById('payment-section').classList.remove('hidden');
+        
+        setTimeout(() => {
+            window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+        }, 100);
     }
+
+    function payViaUPI() {
+        if (!currentUpiUrl) return;
+        window.location.href = currentUpiUrl;
+        setTimeout(() => {
+            if (tg && tg.openLink) {
+                try { tg.openLink(currentUpiUrl); } catch(e) {}
+            }
+        }, 500);
+    }
+
+    let autoCloseTimer;
+    let finalDataPayload = null;
 
     function submitUTR() {
         const utr = document.getElementById('utr-input').value.trim();
-        if (utr.length !== 12 || isNaN(utr)) return alert("Enter valid 12-digit UTR!");
+        if (utr.length !== 12 || isNaN(utr)) return alert("Please enter a valid 12-digit UTR number!");
 
-        // Fill Receipt
         document.getElementById('r-name').innerText = tgUser;
         document.getElementById('r-id').innerText = tgId;
         document.getElementById('r-utr').innerText = utr;
@@ -137,10 +237,29 @@
 
         document.getElementById('main-screen').classList.add('hidden');
         document.getElementById('receipt-screen').classList.remove('hidden');
+        window.scrollTo({ top: 0, behavior: 'smooth' });
 
-        // Send Data to Bot
-        let data = { utr: utr, amount: finalAmount, days: finalDays, name: tgUser, id: tgId };
-        tg.sendData(JSON.stringify(data));
+        finalDataPayload = { utr: utr, amount: finalAmount, days: finalDays, name: tgUser, id: tgId };
+
+        let timeLeft = 5;
+        let countdownEl = document.getElementById('countdown-text');
+        
+        autoCloseTimer = setInterval(() => {
+            timeLeft--;
+            countdownEl.innerText = `Please wait... Sending data to bot in ${timeLeft}s`;
+            
+            if (timeLeft <= 0) {
+                clearInterval(autoCloseTimer);
+                tg.sendData(JSON.stringify(finalDataPayload)); 
+            }
+        }, 1000);
+    }
+
+    function forceSubmitNow() {
+        clearInterval(autoCloseTimer);
+        document.getElementById('force-close-btn').innerText = "Sending...";
+        document.getElementById('force-close-btn').disabled = true;
+        tg.sendData(JSON.stringify(finalDataPayload));
     }
 </script>
 </body>
